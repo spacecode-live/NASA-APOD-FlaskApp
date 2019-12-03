@@ -6,7 +6,6 @@ from reportlab.lib.pagesizes import letter
 from reportlab.platypus import Paragraph, Frame, KeepInFrame
 from reportlab.lib.units import inch
 from reportlab.lib.styles import getSampleStyleSheet
-import os
 
 app = Flask(__name__)
 
@@ -15,7 +14,7 @@ def index():
     request_date = request.args.get('date')
     print(request_date)
     today = date.today()
-    apikey = os.getenv('API_KEY')
+    apikey = "VIHpJnZbDy6lraMNDzVHGsKTXMHMn3vgIC5Cu8FV"
 
     if not request_date:
         return render_template('index.html', request_date=today.strftime("%Y-%m-%d"), apikey=apikey, pdf=getPDF)
