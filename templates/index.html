@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Astronomy Picture of the Day</title>
+    </head>
+    <body>
+        <div id="media"></div>
+        <div data-date ={{ request_date }} id = "dateselector"></div>
+        <p id="desc"><b>Description: </b><br></p>
+        <form method = "GET">
+            <b>Date: </b>
+            <input name="date" type="date"></input>
+            <br>
+            <input type="submit" value="Get Picture of the Day"></submit>
+        </form>
+        <button><a target="_blank" id="pdfdownload">Download PDF</a><button>
+        <script>
+            var data;
+
+            fetch('https://api.nasa.gov/planetary/apod?api_key={{apikey}}&date={{request_date}}')
+            .then(
+                function(response) {
+                if (response.status !== 200) {
+                    console.log('Request failed. Status Code: ' + response.status);
+                    return;
+                }
+
+                response.json().then(function(data) {
+                    console.log(data)
+                    window.data = data
+                    if(data.media_type == "video"){
+                        document.getElementById("media").innerHTML = "<iframe src=\"" + data.url + "\"></iframe>";
+                        url_v = data.url.substring(30,41)
+                        document.getElementById("pdfdownload").href = "/data/output.pdf?url=http://img.youtube.com/vi/"+url_v+"/0.jpg&desc="+data.explanation;
+                    }
+                    if(data.media_type == "image"){
+                        document.getElementById("media").innerHTML = "<img src=\""+ data.url +"\"></img>";
+                        document.getElementById("pdfdownload").href = "/data/output.pdf?url="+data.url+"&desc="+data.explanation
+                    }
+                    document.getElementById("desc").innerHTML += data.explanation
+                });
+                }
+            )
+            .catch(function(err) {
+                console.log('Fetch Error :-S', err);
+            });
+        </script>
+    </body>
+</html>
